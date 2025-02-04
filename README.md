@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This project focuses on analyzing sales data using R, guided by data science consultant Megan Silvey. The goal is to work through a real-world business scenario for an enterprise tech company, leveraging data analysis and machine learning techniques to extract meaningful insights.
+This project focuses on analyzing sales data using R language. The goal is to work through a real-world business scenario for an enterprise tech company, leveraging data analysis and machine learning techniques to extract meaningful insights.
 
 The dataset includes:
 	•	Orders – Information about customer purchases
