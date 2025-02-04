@@ -1,0 +1,487 @@
+```{r}
+#Getting working directory
+getwd()
+```
+```{r}
+#Install rmarkdown package
+install.packages("rmarkdown")
+```
+```{r}
+#install openxlsx package
+install.packages("openxlsx")
+```
+
+```{r}
+#import openxlsx package
+library(openxlsx)
+```
+
+```{r}
+#setting working directory
+setwd("U:/Internship Preparation/R Project")
+```
+
+
+```{r}
+#loading Red30 Tech sales data
+sales <- read.xlsx("Red30 Tech Sales.xlsx", 1, detectDates = TRUE)
+sales
+
+```
+
+```{r}
+#install data.table package
+install.packages("data.table")
+```
+
+```{r}
+#import data.table package
+library(data.table)
+
+```
+```{r}
+#getting sales summary
+summary(sales)
+```
+```{r}
+#narrow sales summary
+summary(sales[ ,c('Quantity', 'Price', 'Discount', 'Order.Total')])
+```
+
+```{r}
+#payment status values counts
+table(sales$Payment.Status)
+```
+
+```{r}
+#payment status proportion
+prop.table(table(sales$Payment.Status))
+```
+
+```{r}
+#get payment plan by total number of orders
+table(sales$Payment.Plan)
+prop.table(table(sales$Payment.Plan))
+```
+```{r}
+#check for null vlaues in sales
+is.null(sales)
+sum(is.na(sales))
+```
+```{r}
+#install dplyr package
+install.packages("dplyr")
+```
+
+```{r}
+#import dplyr package
+library(dplyr)
+```
+
+```{r}
+#sorting data by order total
+sales[order(sales$Order.Total, decreasing = TRUE), ]
+```
+
+```{r}
+#sorting data by order quantity
+sales[order(sales$Quantity, decreasing = TRUE), ]
+```
+
+```{r}
+#get top N values by customer state
+data_mod <- sales[order(sales$Quantity, decreasing = TRUE), ]
+
+data_mod <- data.table(data_mod, key="CustState")
+
+data_mod <- data_mod[, head(.SD, 1), by=CustState]
+
+data_mod
+
+
+
+```
+
+```{r}
+#get top customers by total number of orders
+sales %>% count(CustName, sort = TRUE)
+```
+
+```{r}
+#get customer type by total number of orders
+table(sales$CustomerType)
+prop.table(table(sales$CustomerType))
+```
+
+```{r}
+#get average sales and quantity by customer type
+sales %>% group_by(CustomerType) %>%
+          summarise(mean_sales = mean(Order.Total),
+                    mean_quantity =  mean(Quantity))
+```
+```{r}
+#get total sales and quantity by cutsomer type
+sales %>% group_by(CustomerType) %>%
+          summarise(total_sales = sum(Order.Total),
+                    total_quantity =  sum(Quantity))
+
+```
+
+```{r}
+#get top customer states by total number of orders
+sales %>% count(CustState, sort=TRUE)
+```
+```{r}
+#review product categories sold by customer type
+table(sales$CustomerType, sales$ProdCategory)
+```
+```{r}
+#review product categories sold by customer state
+table(sales$CustState, sales$ProdCategory)
+```
+```{r}
+#sort data by order total
+sales[order(sales$Order.Total, decreasing = TRUE), ]
+```
+
+```{r}
+#sort data by order quantity
+sales[order(sales$Quantity, decreasing = TRUE), ]
+```
+
+```{r}
+#get top employess by total number of orders
+sales %>% count(Employee.Name, sort=TRUE)
+```
+
+```{r}
+#get top employee job positions by total number of orders
+sales %>% count(Employee.Job.Title, sort=TRUE)
+```
+
+```{r}
+#review employee job titles
+table(sales$Employee.Job.Title)
+prop.table(table(sales$Employee.Job.Title))
+```
+```{r}
+#review employee sales region
+table(sales$Sales.Region)
+prop.table(table(sales$Sales.Region))
+```
+
+```{r}
+#average sales and quantity by employee job titles
+sales %>% group_by(Employee.Job.Title) %>%
+          summarise(mean_sales = mean(Order.Total),
+          mean_quantity = mean(Quantity))
+```
+
+```{r}
+#total sales and quantity by emoloyee job titles
+sales %>% group_by(Employee.Job.Title) %>%
+          summarise(total_sales = sum(Order.Total),
+          total_quantity = sum(Quantity))
+```
+
+```{r}
+#review product categories sold by employee job title
+table(sales$Employee.Job.Title, sales$ProdCategory)
+```
+
+```{r}
+#review sales regions by employee job title
+table(sales$Employee.Job.Title, sales$Sales.Region)
+
+```
+```{r}
+#sort data by order total
+sales[order(sales$Order.Total, decreasing=TRUE), ]
+```
+```{r}
+#sort data by order quantity
+sales[order(sales$Quantity, decreasing=TRUE), ]
+```
+
+```{r}
+#get top products by total number of orders
+sales %>% count(ProdName, sort=TRUE)
+```
+```{r}
+#get top product categories by total number of orders
+sales %>% count(ProdCategory, sort=TRUE)
+```
+```{r}
+#review product category proportions
+prop.table(table(sales$ProdCategory))
+```
+```{r}
+#average sales and quantity by product category
+sales %>% group_by(ProdCategory) %>%
+          summarise(mean_sales =  mean(Order.Total),
+                    mean_quantity = mean(Quantity))
+```
+
+```{r}
+#total sales and quantity by product category
+sales %>% group_by(ProdCategory) %>%
+          summarise(total_sales =  sum(Order.Total),
+                    total_quantity = sum(Quantity))
+
+```
+
+```{r}
+#review product categories sold by sales regions
+table(sales$ProdCategory, sales$Sales.Region)
+```
+
+```{r}
+#review product categories sold by order type
+table(sales$ProdCategory, sales$OrderType)
+
+```
+
+```{r}
+#review product categories sold by customer type
+table(sales$ProdCategory, sales$CustomerType)
+```
+Preparing the data for classification
+```{r}
+#get order month
+sales$OrderMonth <- format(sales$OrderDate, "%B")
+summary(sales)
+
+```
+```{r}
+#get order year
+sales$OrderYear <- format(sales$OrderDate, "%Y")
+summary(sales)
+
+```
+```{r}
+#factor payment status
+sales$Payment.Status <- factor(sales$Payment.Status)
+summary(sales)
+```
+```{r}
+#get subset of sales data
+sales_subset <- subset(sales, select = c(Employee.Job.Title, Sales.Region, OrderMonth, OrderYear, OrderType, CustomerType, ProdCategory, Quantity, Price, Discount, Order.Total, Payment.Plan, Payment.Status))
+
+```
+
+```{r}
+#split train and test data
+set.seed(42)
+bound <- floor((nrow(sales_subset)/4*3))
+
+df <- sales_subset[sample(nrow(sales_subset)), ]
+train <- df[1:bound,]
+test <- df[(bound+1):nrow(df),]
+summary(train)
+summary(test)
+```
+Making a decision tree classification algorithm
+
+```{r}
+#installing packages
+install.packages("tidymodels")
+install.packages("rpart")
+install.packages("rpart.plot")
+```
+```{r}
+#load the packages
+library(tidymodels)
+library(rpart)
+library(rpart.plot)
+```
+
+```{r}
+#create descision tree model
+tree <- decision_tree() %>%
+        set_engine("rpart") %>%
+        set_mode("classification")
+  
+```
+
+```{r}
+#create recipe
+df_recipe <- recipe(Payment.Status~ ., data=df) %>%
+             step_normalize(all_numeric())
+```
+
+```{r}
+#create decision tree workflow
+tree_wf <- workflow() %>%
+          add_recipe(df_recipe) %>%
+          add_model(tree) %>%
+          fit(train)
+```
+
+```{r}
+#get summary of tree_wf
+summary(tree_wf)
+```
+
+```{r}
+#predict on  model
+predResults <- data.frame(predict(tree_wf, test))
+colnames(predResults) <- c("test_pred_tree")
+test <- cbind(test, predResults)
+test
+```
+```{r, fig.width=11, fig.height=7}
+#plot decision tree
+fit <- rpart(Payment.Status~., data=train, method="class")
+rpart.plot(fit, tweak = 1.5)
+```
+random forest tree algorithm
+```{r}
+#install packages
+install.packages("ranger")
+
+
+```
+```{r}
+#load packages
+library(tidymodels)
+library(ranger)
+```
+```{r}
+#create random forest model
+rf <- rand_forest() %>%
+  set_engine("ranger", importance="impurity") %>%
+  set_mode("classification")
+```
+
+```{r}
+#create random_forest workflow
+tree_rand_forest <- workflow() %>%
+                    add_recipe(df_recipe) %>%
+                    add_model(rf) %>%
+                    fit(train)
+```
+
+```{r}
+#get summary of tree_rand_forest
+summary(tree_rand_forest)
+```
+```{r}
+#predict on model
+predResults <- data.frame(predict(tree_rand_forest, test))
+colnames(predResults) <- c("test_pred_rf")
+test <- cbind(test, predResults)
+test
+```
+support vector machine algorithm 
+
+```{r}
+#install packages
+install.packages("e1071")
+```
+```{r}
+#load packages
+library(e1071)
+```
+
+```{r}
+#create svm model
+classifier <- svm(formula = Payment.Status~.,
+                  data = train,
+                  
+                  type = "C-classification",
+                  kernel = "linear")
+```
+
+
+```{r}
+#get summary of classifier
+summary(classifier)
+```
+```{r}
+#predict on model
+test$test_pred_svm <- predict(classifier, test)
+test
+```
+Evaluating the models
+```{r}
+#review the test data
+test
+```
+```{r}
+#create confuson matrix for pred tree
+conf_mat(test, truth=Payment.Status, estimate = test_pred_tree)
+```
+
+```{r}
+#get summary metrics for pred tree
+dt_metrics <- metric_set(accuracy, sens, spec, precision, f_meas, kap)
+dt_metrics(test, truth=Payment.Status, estimate = test_pred_tree)
+```
+```{r}
+#create confuion matrix for rf
+conf_mat(test, truth=Payment.Status, estimate=test_pred_rf)
+```
+```{r}
+#get summary metrics for rf
+dt_metrics <- metric_set(accuracy, sens, spec, precision, f_meas, kap)
+dt_metrics(test, truth=Payment.Status, estimate = test_pred_rf)
+```
+```{r}
+#create confuion matrix for svm
+conf_mat(test, truth=Payment.Status, estimate=test_pred_svm)
+```
+```{r}
+#get summary metrics for svm
+dt_metrics <- metric_set(accuracy, sens, spec, precision, f_meas, kap)
+dt_metrics(test, truth=Payment.Status, estimate = test_pred_svm)
+```
+```{r}
+#tune svm algorithm
+# Tune the SVM model
+library(e1071)
+obj <- tune.svm(Payment.Status ~ ., data = train,
+                cost = c(1, 5, 10, 20, 100),
+                gamma = c(0.01, 0.1, 0.5, 1, 5, 10),
+                type = "C-classification",  # Ensure correct type spelling
+                kernel = "linear")
+
+# View the tuning results
+```
+
+
+```{r}
+summary(obj)
+              
+```
+
+```{r}
+# Run the tuned SVM model
+new_classifier <- svm(formula = Payment.Status ~ ., 
+                      data = train,
+                      cost = 100,
+                      gamma = 0.01,
+                      type = "C-classification",  
+                      kernel = "linear")
+
+```
+
+```{r}
+#get classifier summary
+summary(new_classifier)
+```
+```{r}
+#predict on new svm model
+test$test_pred_svm <- predict(new_classifier,test)
+test
+```
+```{r}
+#create confuion matrix for svm
+conf_mat(test, truth=Payment.Status, estimate=test_pred_svm)
+```
+
+```{r}
+#get summary metrics for svm
+dt_metrics <- metric_set(accuracy, sens, spec, precision, f_meas, kap)
+dt_metrics(test, truth=Payment.Status, estimate = test_pred_svm)
+```
+
