@@ -27,6 +27,5 @@ Through this analysis, we aim to gain valuable business insights, enhance custom
 ## Data Analysis Techniques Used  
 •	Data Wrangling & Transformation: Using tidyverse and dplyr for data cleaning  
 •	Data Visualization: Using ggplot2 to create insightful visualizations  
-•	Statistical Analysis: Identifying key trends and correlations  
-•	Clustering: Segmenting customers based on purchase behavior  
+•	Statistical Analysis: Identifying key trends and correlations    
 •	Classification: Predicting sales trends and customer behavior
