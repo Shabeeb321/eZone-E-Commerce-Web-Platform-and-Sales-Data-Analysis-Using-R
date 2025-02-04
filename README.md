@@ -23,3 +23,10 @@ Through this analysis, we aim to gain valuable business insights, enhance custom
 ✔ Order & Payment Trend Analysis – Identify trends in purchasing and payment behaviors  
 ✔ Machine Learning Techniques – Use classification to derive insights
 
+
+## Data Analysis Techniques Used  
+•	Data Wrangling & Transformation: Using tidyverse and dplyr for data cleaning  
+•	Data Visualization: Using ggplot2 to create insightful visualizations  
+•	Statistical Analysis: Identifying key trends and correlations  
+•	Clustering: Segmenting customers based on purchase behavior  
+•	Classification: Predicting sales trends and customer behavior
