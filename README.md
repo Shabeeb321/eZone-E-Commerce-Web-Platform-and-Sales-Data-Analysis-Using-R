@@ -21,5 +21,5 @@ Through this analysis, we aim to gain valuable business insights, enhance custom
 ✔ Sales Performance Analysis – Evaluate revenue, order trends, and employee performance  
 ✔ Customer Segmentation – Apply clustering techniques to identify customer groups  
 ✔ Order & Payment Trend Analysis – Identify trends in purchasing and payment behaviors  
-✔ Machine Learning Techniques – Use classification and clustering to derive insights
+✔ Machine Learning Techniques – Use classification to derive insights
 
